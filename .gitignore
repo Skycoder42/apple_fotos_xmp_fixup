@@ -26,4 +26,9 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
+# generated files
+*.g.dart
+
+# other
 custom_lint.log
+*.xmp
