@@ -2,12 +2,15 @@ name: apple_fotos_xmp_fixup
 version: 0.1.0
 publish_to: none
 
+environment:
+  sdk: ^3.2.0
+
 platforms:
   linux:
   macos:
 
-environment:
-  sdk: ^3.2.0
+executables:
+  apple-fotos-xmp-fixup: apple_fotos_xmp_fixup
 
 dependencies:
   meta: ^1.12.0
