@@ -1,5 +1,5 @@
 name: apple_fotos_xmp_fixup
-version: 0.1.0
+version: 0.2.0
 publish_to: none
 
 environment:
@@ -15,6 +15,7 @@ executables:
 dependencies:
   meta: ^1.12.0
   path: ^1.9.0
+  rxdart: ^0.27.7
   xml: ^6.5.0
   xml_annotation: ^2.4.0
 

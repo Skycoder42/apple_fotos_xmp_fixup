@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
@@ -9,7 +7,7 @@ import 'xmp_loader.dart';
 class ExifUpdater {
   final XmpLoader _xmpLoader;
 
-  ExifUpdater(this._xmpLoader);
+  const ExifUpdater(this._xmpLoader);
 
   Future<void> fixDates(String imagePath) async {
     final xmpPath = path.setExtension(imagePath, '.xmp');
@@ -17,7 +15,9 @@ class ExifUpdater {
     final createDate = xmpData.rdf.description.dateCreated;
 
     await _runExifTool([
-      '-AllDates=${_toExifDate(createDate)}',
+      '-SubSecDateTimeOriginal=${_toExifDate(createDate)}',
+      '-SubSecCreateDate=${_toExifDate(createDate)}',
+      '-SubSecModifyDate=${_toExifDate(createDate)}',
       imagePath,
     ]);
   }
@@ -37,19 +37,30 @@ class ExifUpdater {
   }
 
   String _toExifDate(DateTime dateTime) {
-    final dtUtc = dateTime.toUtc();
     final buffer = StringBuffer()
-      ..write(dtUtc.year)
+      ..write(dateTime.year)
       ..write(':')
-      ..writePad2(dtUtc.month)
+      ..writePad2(dateTime.month)
       ..write(':')
-      ..writePad2(dtUtc.day)
+      ..writePad2(dateTime.day)
       ..write(' ')
-      ..writePad2(dtUtc.hour)
+      ..writePad2(dateTime.hour)
       ..write(':')
-      ..writePad2(dtUtc.minute)
+      ..writePad2(dateTime.minute)
       ..write(':')
-      ..writePad2(dtUtc.second);
+      ..writePad2(dateTime.second);
+
+    if (!dateTime.isUtc) {
+      final hours = dateTime.timeZoneOffset.inHours;
+      final minutes =
+          (dateTime.timeZoneOffset - Duration(hours: hours)).inMinutes;
+      buffer
+        ..write('+')
+        ..writePad2(hours)
+        ..write(':')
+        ..writePad2(minutes);
+    }
+
     return buffer.toString();
   }
 }

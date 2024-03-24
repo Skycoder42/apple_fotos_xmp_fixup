@@ -3,3 +3,7 @@ include: package:dart_test_tools/strict.yaml
 analyzer:
   exclude:
     - lib/src/models/*.g.dart
+
+linter:
+  rules:
+    avoid_print: false
