@@ -31,6 +31,7 @@ class ExifUpdater {
       '-SubSecDateTimeOriginal=${_toExifDate(createDate)}',
       '-SubSecCreateDate=${_toExifDate(createDate)}',
       '-SubSecModifyDate=${_toExifDate(createDate)}',
+      '-overwrite_original',
       imagePath,
     ]);
 
