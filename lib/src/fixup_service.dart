@@ -23,14 +23,20 @@ class FixupService {
         .where((f) => _ext.contains(path.extension(f.path).toLowerCase()))
         .bufferCount(Platform.numberOfProcessors);
 
+    var totalFiles = 0;
+    var totalFixed = 0;
     await for (final pack in imageFiles) {
-      await Future.wait(pack.map(_fixup));
+      totalFiles += pack.length;
+      final result = await Future.wait(pack.map(_fixup));
+      totalFixed = result.fold(totalFixed, (p, e) => p + e);
     }
+    stderr.writeln('Fixed up $totalFixed/$totalFiles files');
   }
 
-  Future<void> _fixup(File file) async {
+  Future<int> _fixup(File file) async {
     try {
-      await _exifUpdater.fixDates(file.path);
+      final didFixup = await _exifUpdater.fixDates(file.path);
+      return didFixup ? 1 : 0;
     } on Exception catch (error) {
       final segments = error.toString().split(': ');
       switch (segments) {
@@ -43,6 +49,7 @@ class FixupService {
         case [final name, ...final remaining]:
           stderr.writeln('$name on ${file.path}: ${remaining.join(': ')}');
       }
+      return 0;
     }
   }
 }

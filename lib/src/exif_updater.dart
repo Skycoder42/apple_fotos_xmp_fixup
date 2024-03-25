@@ -11,7 +11,7 @@ class ExifUpdater {
 
   const ExifUpdater(this._xmpLoader);
 
-  Future<void> fixDates(String imagePath) async {
+  Future<bool> fixDates(String imagePath) async {
     final hasRequiredDates = await _streamExifTool([
           '-DateTimeOriginal',
           '-CreateDate',
@@ -20,7 +20,7 @@ class ExifUpdater {
         2;
 
     if (hasRequiredDates) {
-      return;
+      return false;
     }
 
     final xmpPath = path.setExtension(imagePath, '.xmp');
@@ -36,6 +36,7 @@ class ExifUpdater {
     ]);
 
     stderr.writeln('Updated timestamps of $imagePath to $createDate');
+    return true;
   }
 
   Future<void> _runExifTool(List<String> arguments) =>
