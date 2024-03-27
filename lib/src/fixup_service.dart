@@ -5,12 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import 'exif_updater.dart';
 
 class FixupService {
-  static const _ext = [
-    '.jpg',
-    '.jpeg',
-    '.png',
-  ];
-
   final ExifUpdater _exifUpdater;
 
   FixupService(this._exifUpdater);
@@ -20,7 +14,7 @@ class FixupService {
         .list(recursive: true)
         .where((e) => e is File)
         .cast<File>()
-        .where((f) => _ext.contains(path.extension(f.path).toLowerCase()))
+        .where((f) => path.extension(f.path).toLowerCase() != '.xmp')
         .bufferCount(Platform.numberOfProcessors);
 
     var totalFiles = 0;
